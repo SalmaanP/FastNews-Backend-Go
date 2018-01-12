@@ -1,12 +1,12 @@
+package main
+
 //https://stackoverflow.com/questions/36432123/how-to-correctly-work-with-mongodb-session-in-go
 
-package common
-
 import (
-	"gopkg.in/mgo.v2"
-	"log"
-	"crypto/tls"
-	"net"
+"gopkg.in/mgo.v2"
+"log"
+"crypto/tls"
+"net"
 )
 
 var mgoSession *mgo.Session
