@@ -1,0 +1,42 @@
+#coding - https://stackoverflow.com/questions/28618243/less-import-url-using-http-instead-of-https-after-minification
+http://dataurl.net/#dataurlmaker for import to data:
+
+
+https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-centos-7
+sudo yum install epel-release
+sudo yum install nginx -y
+sudo /etc/init.d/nginx start
+sudo yum install git -y
+git clone https://github.com/SalmaanP/FastNews-Frontend-React.git
+cd FastNews-Frontend-React/
+curl --silent --location https://rpm.nodesource.com/setup_9.x | sudo bash -
+sudo yum -y install nodejs
+sudo yum install gcc-c++ make -y
+npm i
+npm run build
+
+https://certbot.eff.org/#centos6-nginx
+./certbot-auto certonly --standalone -d fastnews.me --debug
+./certbot-auto certonly --standalone -d fastnews.me -d www.fastnews.me --debug --expand
+https://coderwall.com/p/e7gzbq/https-with-certbot-for-nginx-on-amazon-linux
+
+https://golang.org/doc/install
+go build -i github.com/FastNews-Backend-Go/fastnews
+https://stackoverflow.com/questions/40817027/golang-nginx-https
+https://bjornjohansen.no/redirect-to-https-with-nginx
+location / {
+         try_files $uri $uri/ /index.html;
+    }
+
+
+netstat -anp|grep :4848
+
+
+Redis:
+https://docs.aws.amazon.com/AmazonElastiCache/latest/UserGuide/GettingStarted.ConnectToCacheNode.html
+
+
+chkconfig nginx on (to autostart nginx on startup)
+pm2 startup
+pm2 save
+

@@ -10,6 +10,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/go-redis/redis"
 	"time"
+	"math/rand"
 )
 
 var dbConfig = getDbDetails()
@@ -18,7 +19,7 @@ var redisConfig = getRedisDetails()
 var client = redis.NewClient(&redis.Options{
 	Addr:     redisConfig.url,
 	Password: redisConfig.password, // no password set
-	DB:       redisConfig.db,  // use default DB
+	DB:       redisConfig.db,       // use default DB
 })
 
 var errors = ErrorMap{"Invalid Category", "Invalid Page Number", "Server Error", "Invalid Article Id"}
@@ -34,6 +35,7 @@ var categories = map[string]bool{
 	"europe":        true,
 	"china":         true,
 	"upliftingnews": true}
+
 
 func getData(w http.ResponseWriter, req *http.Request) {
 
@@ -220,6 +222,35 @@ func searchArticles(w http.ResponseWriter, req *http.Request) {
 
 	}
 
+}
+
+func handleAlexa(w http.ResponseWriter, req *http.Request) {
+
+	var temp_result []Article
+
+	session := GetMongoSession(dbConfig.url, dbConfig.authDB, dbConfig.username, dbConfig.password)
+	collection := session.DB(dbConfig.dbName).C("worldnews")
+
+	err := collection.
+		Find(bson.M{}).
+		Sort("-date_added", "-score").
+		Limit(18).
+		All(&temp_result)
+
+	if err != nil {
+		fmt.Print(err)
+		w.WriteHeader(500)
+		w.Write([]byte(errors.ServerError))
+		return
+	}
+
+	result := temp_result[rand.Intn(len(temp_result))]
+
+	jData, _ := json.Marshal(result)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jData)
+	return
 
 
 }
