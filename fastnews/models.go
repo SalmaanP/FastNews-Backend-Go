@@ -39,3 +39,25 @@ type RedisMap struct {
 }
 
 type Articles []Article
+
+type Alexa struct {
+	Version string `json:"version"`
+	Response AlexaResponse `json:"response"`
+}
+
+type AlexaResponse struct {
+	OutputSpeech AlexaOutputSpeech `json:"outputSpeech"`
+	Card AlexaCard `json:"card"`
+	ShouldEndSession string `json:"shouldEndSession"`
+}
+
+type AlexaOutputSpeech struct {
+	Type string `json:"type"`
+	Text string `json:"text"`
+}
+
+type AlexaCard struct {
+	Type string `json:"type"`
+	Title string `json:"title"`
+	Content string `json:"content"`
+}

@@ -246,7 +246,15 @@ func handleAlexa(w http.ResponseWriter, req *http.Request) {
 
 	result := temp_result[rand.Intn(len(temp_result))]
 
-	jData, _ := json.Marshal(result)
+	responseOutputSpeech := AlexaOutputSpeech{"PlainText", result.Title}
+	responseCard := AlexaCard{"Simple", result.Title, result.Summary}
+	responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "false"}
+	responseObj := Alexa{"1.0", responseResponse}
+
+	fmt.Print(responseObj)
+
+	jData, _ := json.Marshal(responseObj)
+
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jData)
