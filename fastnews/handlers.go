@@ -249,7 +249,7 @@ func handleAlexa(w http.ResponseWriter, req *http.Request) {
 
 	strings.Replace(result.Summary, "\n"," ",-1)
 
-	responseOutputSpeech := AlexaOutputSpeech{"PlainText", result.Summary}
+	responseOutputSpeech := AlexaOutputSpeech{"PlainText", result.Title + result.Summary}
 	responseCard := AlexaCard{"Simple", result.Title, result.Summary}
 	responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "false"}
 	responseObj := Alexa{"1.0", responseResponse}
