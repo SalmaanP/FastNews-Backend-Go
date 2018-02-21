@@ -11,6 +11,7 @@ import (
 	"github.com/go-redis/redis"
 	"time"
 	"math/rand"
+	"strings"
 )
 
 var dbConfig = getDbDetails()
@@ -246,12 +247,13 @@ func handleAlexa(w http.ResponseWriter, req *http.Request) {
 
 	result := temp_result[rand.Intn(len(temp_result))]
 
-	responseOutputSpeech := AlexaOutputSpeech{"PlainText", result.Title}
+	strings.Replace(result.Summary, "\n"," ",-1)
+
+	responseOutputSpeech := AlexaOutputSpeech{"PlainText", result.Summary}
 	responseCard := AlexaCard{"Simple", result.Title, result.Summary}
 	responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "false"}
 	responseObj := Alexa{"1.0", responseResponse}
 
-	fmt.Print(responseObj)
 
 	jData, _ := json.Marshal(responseObj)
 
