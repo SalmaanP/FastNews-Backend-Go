@@ -227,6 +227,14 @@ func searchArticles(w http.ResponseWriter, req *http.Request) {
 
 func handleAlexa(w http.ResponseWriter, req *http.Request) {
 
+	if !validateRequest(w, req){
+		return
+	}
+
+	if !verifyJSON(w, req){
+		return
+	}
+
 	var temp_result []Article
 
 	session := GetMongoSession(dbConfig.url, dbConfig.authDB, dbConfig.username, dbConfig.password)
