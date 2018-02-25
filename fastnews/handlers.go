@@ -235,6 +235,11 @@ func handleAlexa(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	echoReq := req.Context().Value("echoRequest").(*EchoRequest)
+	fmt.Println(echoReq.GetRequestType(), echoReq.GetIntentName(), echoReq.GetSessionID(), echoReq.GetUserID())
+
+
+
 	var temp_result []Article
 
 	session := GetMongoSession(dbConfig.url, dbConfig.authDB, dbConfig.username, dbConfig.password)
@@ -259,7 +264,7 @@ func handleAlexa(w http.ResponseWriter, req *http.Request) {
 
 	responseOutputSpeech := AlexaOutputSpeech{"PlainText", result.Title + result.Summary}
 	responseCard := AlexaCard{"Simple", result.Title, result.Summary}
-	responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "false"}
+	responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "true"}
 	responseObj := Alexa{"1.0", responseResponse}
 
 
