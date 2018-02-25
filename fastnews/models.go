@@ -144,3 +144,8 @@ type EchoRespPayload struct {
 	Content string        `json:"content,omitempty"`
 	Image   EchoRespImage `json:"image,omitempty"`
 }
+
+type ReqJson struct {
+	Valid bool
+	Body *EchoRequest
+}

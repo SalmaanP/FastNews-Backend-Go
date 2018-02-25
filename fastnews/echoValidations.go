@@ -88,29 +88,39 @@ func HTTPError(w http.ResponseWriter, logMsg string, err string, errCode int) {
 }
 
 // Decode the JSON request and verify it.
-func verifyJSON(w http.ResponseWriter, r *http.Request) bool {
+func verifyJSON(w http.ResponseWriter, r *http.Request) ReqJson {
 	var echoReq *EchoRequest
+	var t ReqJson
+
 	err := json.NewDecoder(r.Body).Decode(&echoReq)
 	if err != nil {
 		HTTPError(w, err.Error(), "Bad Request", 400)
-		return false
+		t.Valid = false
+		t.Body = nil
+		return t
 	}
 
 	// Check the timestamp
 	if !echoReq.VerifyTimestamp() && r.URL.Query().Get("_dev") == "" {
 		HTTPError(w, "Request too old to continue (>150s).", "Bad Request", 400)
-		return false
+		t.Valid = false
+		t.Body = nil
+		return t
 	}
 
 	// Check the app id
 	if !echoReq.VerifyAppID("amzn1.ask.skill.6d962c3c-24ca-44cc-aca0-7713f23019f5") {
 		HTTPError(w, "Echo AppID mismatch!", "Bad Request", 400)
-		return false
+		t.Valid = false
+		t.Body = nil
+		return t
 	}
 
 	r = r.WithContext(context.WithValue(r.Context(), "echoRequest", echoReq))
 
-	return true
+	t.Valid = true
+	t.Body = echoReq
+	return t
 }
 
 // Run all mandatory Amazon security checks on the request.

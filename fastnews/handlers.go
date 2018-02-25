@@ -231,14 +231,12 @@ func handleAlexa(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if !verifyJSON(w, req){
+	jsonBody := verifyJSON(w, req)
+	if !jsonBody.Valid{
 		return
 	}
 
-	echoReq := req.Context().Value("echoRequest").(*EchoRequest)
-	fmt.Println(echoReq.GetRequestType(), echoReq.GetIntentName(), echoReq.GetSessionID(), echoReq.GetUserID())
-
-
+	fmt.Print(jsonBody.Body.GetIntentName())
 
 	var temp_result []Article
 
