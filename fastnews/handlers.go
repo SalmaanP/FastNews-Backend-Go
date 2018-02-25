@@ -236,7 +236,35 @@ func handleAlexa(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if jsonBody.Body.GetIntentName() == "GetNews" {
+	if jsonBody.Body.GetIntentName() == "AMAZON.HelpIntent" {
+
+		responseOutputSpeech := AlexaOutputSpeech{"PlainText", "Short News gives you summarized news articles. Just ask for news articles!"}
+		responseCard := AlexaCard{"Simple", "Help for Fast News", "Short News gives you summarized news articles. Just ask for news articles!"}
+		responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "false"}
+		responseObj := Alexa{"1.0", responseResponse}
+
+
+		jData, _ := json.Marshal(responseObj)
+
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jData)
+		return
+	} else if jsonBody.Body.GetIntentName() == "AMAZON.CancelIntent" || jsonBody.Body.GetIntentName() == "AMAZON.StopIntent" {
+
+		responseOutputSpeech := AlexaOutputSpeech{"PlainText", "Okay, Bye!"}
+		responseCard := AlexaCard{"Simple", "Bye!", "Bye Bye!"}
+		responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "true"}
+		responseObj := Alexa{"1.0", responseResponse}
+
+
+		jData, _ := json.Marshal(responseObj)
+
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jData)
+		return
+	} else {
 		var temp_result []Article
 
 		session := GetMongoSession(dbConfig.url, dbConfig.authDB, dbConfig.username, dbConfig.password)
@@ -261,34 +289,6 @@ func handleAlexa(w http.ResponseWriter, req *http.Request) {
 
 		responseOutputSpeech := AlexaOutputSpeech{"PlainText", result.Title + result.Summary}
 		responseCard := AlexaCard{"Simple", result.Title, result.Summary}
-		responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "true"}
-		responseObj := Alexa{"1.0", responseResponse}
-
-
-		jData, _ := json.Marshal(responseObj)
-
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(jData)
-		return
-	} else if jsonBody.Body.GetIntentName() == "AMAZON.HelpIntent" {
-
-		responseOutputSpeech := AlexaOutputSpeech{"PlainText", "Short News gives you summarized news articles. Just ask for news articles!"}
-		responseCard := AlexaCard{"Simple", "Help for Fast News", "Short News gives you summarized news articles. Just ask for news articles!"}
-		responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "false"}
-		responseObj := Alexa{"1.0", responseResponse}
-
-
-		jData, _ := json.Marshal(responseObj)
-
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(jData)
-		return
-	} else if jsonBody.Body.GetIntentName() == "AMAZON.CancelIntent" || jsonBody.Body.GetIntentName() == "AMAZON.StopIntent" {
-
-		responseOutputSpeech := AlexaOutputSpeech{"PlainText", "Okay, Bye!"}
-		responseCard := AlexaCard{"Simple", "Bye!", "Bye Bye!"}
 		responseResponse := AlexaResponse{responseOutputSpeech, responseCard, "true"}
 		responseObj := Alexa{"1.0", responseResponse}
 
